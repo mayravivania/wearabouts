@@ -70,4 +70,4 @@ wearabouts/
 
 ## Laporan
 
-<URL Google Drive, pastikan aksesnya terbuka>
+https://drive.google.com/drive/folders/13vDT0Kz2hLloYVStEiD8FmRsP62xxzX0?usp=sharing
