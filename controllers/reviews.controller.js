@@ -63,7 +63,7 @@ exports.listByItem = async (req, res) => {
     res.json({
       success: true,
       message: 'Ulasan barang',
-      data: { averageRating: Number(average.toFixed(1)), total, reviews }
+      data: { averageRating: total ? Number(average.toFixed(1)) : null, total, reviews }
     });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Gagal mengambil ulasan', error: err.message });
