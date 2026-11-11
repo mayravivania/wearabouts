@@ -15,6 +15,7 @@ app.use('/api/items', require('./routes/items.routes'));
 app.use('/api/orders', require('./routes/orders.routes'));
 app.use('/api/wishlist', require('./routes/wishlist.routes'));
 app.use('/api/reviews', require('./routes/reviews.routes'));
+app.use('/api/consignments', require('./routes/consignments.routes'));
 
 app.get('/', (req, res) => res.json({ success: true, message: 'Wearabouts API berjalan' }));
 
