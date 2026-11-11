@@ -4,7 +4,7 @@ Etalase web thrift store untuk barang unik berstok tunggal. Setiap barang hanya 
 
 Proyek ini adalah REST API (backend) dengan dua peran: **admin** (mengelola barang dan pesanan) dan **buyer** (berbelanja, wishlist, ulasan).
 
-## Kelompok <X>
+## Kelompok 21
 
 - Mayravivania Syahda Charisa (24/538308/TK/59701)
 - Zahira Anindya Putri (24/543202/TK/60347)
@@ -55,7 +55,7 @@ wearabouts/
 │   └── Review.js
 ├── controllers/
 │   ├── auth.controller.js
-│   ├── item.controller.js
+│   ├── items.controller.js
 │   ├── orders.controller.js
 │   ├── wishlist.controller.js
 │   └── reviews.controller.js
@@ -65,8 +65,16 @@ wearabouts/
 │   ├── orders.routes.js
 │   ├── wishlist.routes.js
 │   └── reviews.routes.js
-└── uploads/
+├── uploads/
+└── jobs/
 ```
+
+## Cara Menjalankan
+
+1. Clone repo, lalu masuk ke foldernya
+2. `npm install`
+3. Salin `.env.example` menjadi `.env`, lalu isi `MONGO_URI`, `JWT_SECRET`, `ADMIN_EMAIL`, dan `ADMIN_PASSWORD`
+4. Jalankan server: `npm run dev` (berjalan di http://localhost:3000)
 
 ## Laporan
 
