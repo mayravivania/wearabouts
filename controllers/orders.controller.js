@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Item = require('../models/Item');
 const Order = require('../models/Order');
 const User = require('../models/User');
+const Review = require('../models/Review');
 
 exports.checkout = async (req, res) => {
   try {
@@ -55,8 +56,20 @@ exports.myOrders = async (req, res) => {
   try {
     const orders = await Order.find({ buyer: req.user.id })
       .populate('item', 'name size condition price photos status')
-      .sort({ createdAt: -1 });
-    res.json({ success: true, message: 'Riwayat pesanan', data: orders });
+      .sort({ createdAt: -1 })
+      .lean();
+
+    // tandai pesanan yang sudah diulas, supaya FE tahu kapan menyembunyikan tombol ulas
+    const reviewed = new Set(
+      (await Review.find({ order: { $in: orders.map((o) => o._id) } }).select('order'))
+        .map((r) => String(r.order))
+    );
+
+    res.json({
+      success: true,
+      message: 'Riwayat pesanan',
+      data: orders.map((o) => ({ ...o, reviewed: reviewed.has(String(o._id)) }))
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Gagal mengambil pesanan', error: err.message });
   }
