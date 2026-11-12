@@ -15,6 +15,7 @@ app.use('/api/items', require('./routes/items.routes'));
 app.use('/api/orders', require('./routes/orders.routes'));
 app.use('/api/wishlist', require('./routes/wishlist.routes'));
 app.use('/api/reviews', require('./routes/reviews.routes'));
+app.use('/api/consignments', require('./routes/consignments.routes'));
 
 app.get('/', (req, res) => res.json({ success: true, message: 'Wearabouts API berjalan' }));
 
@@ -22,5 +23,6 @@ app.use((req, res) => res.status(404).json({ success: false, message: 'Endpoint 
 app.use((err, req, res, next) => res.status(400).json({ success: false, message: err.message }));
 
 connectDB().then(() => {
+  require('./jobs/expirePending')();
   app.listen(process.env.PORT || 3000, () => console.log('Server jalan di port', process.env.PORT || 3000));
 });

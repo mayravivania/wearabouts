@@ -63,8 +63,23 @@ exports.listByItem = async (req, res) => {
     res.json({
       success: true,
       message: 'Ulasan barang',
-      data: { averageRating: Number(average.toFixed(1)), total, reviews }
+      data: { averageRating: total ? Number(average.toFixed(1)) : null, total, reviews }
     });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Gagal mengambil ulasan', error: err.message });
+  }
+};
+
+// Publik: ulasan terbaru dari semua barang (untuk testimoni di halaman home)
+exports.listAll = async (req, res) => {
+  try {
+    const limit = Math.min(Number(req.query.limit) || 12, 50);
+    const reviews = await Review.find()
+      .populate('user', 'name')
+      .populate('item', 'name photos')
+      .sort({ createdAt: -1 })
+      .limit(limit);
+    res.json({ success: true, message: 'Ulasan terbaru', data: reviews });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Gagal mengambil ulasan', error: err.message });
   }
