@@ -28,25 +28,30 @@ Habis ganti `.env.local`, restart `npm run dev`.
 frontend/
 ├── app/                    halaman (file-based routing)
 │   ├── layout.js           font, navbar, footer
-│   ├── globals.css         warna dan font (design token)
-│   ├── page.js             /            home
+│   ├── globals.css         warna, font, hang tag, cap sold
+│   ├── page.js             /            beranda
 │   ├── katalog/page.js     /katalog
 │   ├── barang/[id]/page.js /barang/:id  detail barang
+│   ├── jual/page.js        /jual        form titip jual
+│   ├── bantuan/page.js     /bantuan     ukuran, kondisi, pengiriman, retur
+│   ├── masuk/, daftar/     /masuk dan /daftar (login, register)
 │   └── not-found.js        halaman 404
 ├── components/
-│   ├── ui/                 komponen dasar: Button, Badge, PriceTag, SoldStamp
-│   ├── ItemCard.jsx        kartu barang
-│   ├── ItemGrid.jsx        grid kartu + loading + kosong + error
-│   ├── ItemPhoto.jsx       foto 4:5
-│   ├── Navbar.jsx, NavLinks.jsx, Footer.jsx
+│   ├── ui/                 Button, Badge, HangTag, SoldStamp, Breadcrumbs
+│   ├── nav/                ShopMenu (desktop), MobileMenu (HP), ShopMenuContent
+│   ├── home/               HeroCarousel, NewArrivals, useRail
 │   ├── katalog/            FilterBar, KatalogView
 │   ├── barang/             ItemDetail
-│   └── home/               NewArrivals
+│   ├── jual/               SellForm
+│   ├── auth/               AuthForm, AuthLayout, RequireAuth
+│   ├── ItemCard.jsx, ItemGrid.jsx, ItemPhoto.jsx
+│   └── Navbar.jsx, NavLinks.jsx, Footer.jsx, NewsletterForm.jsx, ThemeToggle.jsx
 ├── hooks/useItems.js       ambil daftar barang (logic dipisah dari UI)
 └── lib/
     ├── api.js              fetch ke backend + token JWT
+    ├── auth.js             useAuth, login, register, logout
     ├── items.js            getItems, getItem
-    ├── config.js           URL API, daftar kategori dan ukuran
+    ├── config.js           URL API, kategori, ukuran, grade kondisi, isi menu
     ├── format.js           format rupiah, URL foto, baris ukuran
     └── mock-items.js       data contoh
 ```
@@ -83,12 +88,16 @@ Komponen client yang pakai `useParams`, `usePathname`, atau `useSearchParams` ha
 
 ## Yang sudah dan belum
 
-Sudah: design system + dark mode, navbar sticky + menu Shop, footer, home (carousel, kategori, rail barang baru), katalog + filter (kategori, ukuran, harga, status), detail barang (tampilan), bantuan (`/bantuan`), jual (`/jual`, form ke `POST /consignments`), 404.
+Sudah: design system + dark mode, navbar sticky + menu Shop, footer, home (carousel, kategori, rail barang baru), katalog + filter (kategori, ukuran, harga, status), detail barang (tampilan), bantuan (`/bantuan`), jual (`/jual`, form ke `POST /consignments`), masuk (`/masuk`) dan daftar (`/daftar`), navbar sesuai status login dan role, 404.
+
+### Login di halaman lain
+
+- `useAuth()` dari `lib/auth.js` mengembalikan `{ user, ready }`. `user` berisi `{ id, name, role }` atau `null`.
+- Halaman yang wajib login dibungkus `RequireAuth`, misalnya `<RequireAuth role="buyer">...</RequireAuth>`. Kalau belum login, user dibawa ke `/masuk` lalu dikembalikan ke halaman tadi.
+- Request yang butuh token cukup `api("/orders", { method: "POST", body, auth: true })`. Kalau token kedaluwarsa (401), user otomatis dianggap logout.
 
 Belum:
 
-- [ ] Login dan register (`/masuk`, `/daftar`), simpan token pakai `setToken` di `lib/api.js`
-- [ ] Navbar berubah sesuai status login dan role
 - [ ] Checkout `POST /orders`, tangani 409 dengan pesan "keduluan"
 - [ ] Incaran (`/incaran`), pesanan saya (`/pesanan`) + form ulasan
 - [ ] Admin: daftar barang, tambah/edit + upload foto, daftar pesanan + ubah status, daftar pengajuan jual (`GET /consignments`, terima/tolak via `PATCH /consignments/:id`)

@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/components/ui/Button";
-import { api, getToken } from "@/lib/api";
+import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 import { CATEGORIES, SIZES, CONDITIONS, USE_MOCK } from "@/lib/config";
 
 const field = "w-full min-h-12 rounded-md border border-line bg-bg px-4 text-[15px] focus:border-fg focus:outline-none";
@@ -10,12 +11,8 @@ const labelCls = "text-sm text-fg-2";
 
 // POST /consignments (multipart, butuh token buyer)
 export default function SellForm() {
-  // token ada di localStorage, jadi di server nilainya null
-  const signedIn = useSyncExternalStore(
-    () => () => {},
-    () => USE_MOCK || Boolean(getToken()),
-    () => null
-  );
+  const { user, ready } = useAuth();
+  const signedIn = ready ? Boolean(user) : null;
   const [photos, setPhotos] = useState([]);
   const [state, setState] = useState({ sending: false, error: "", done: false });
 

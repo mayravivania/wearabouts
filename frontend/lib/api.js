@@ -50,6 +50,10 @@ export async function api(path, { method = "GET", body, auth = false } = {}) {
   }
 
   const json = await res.json().catch(() => ({}));
+  // token kedaluwarsa (1 hari) atau tidak valid: anggap logout
+  if (res.status === 401 && auth && typeof window !== "undefined") {
+    window.dispatchEvent(new Event("wearabouts:unauthorized"));
+  }
   if (!res.ok || json.success === false) {
     throw new ApiError(json.message || "Something went wrong", res.status);
   }

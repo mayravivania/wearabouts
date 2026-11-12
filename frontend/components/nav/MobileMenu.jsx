@@ -3,18 +3,26 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import ShopMenuContent from "./ShopMenuContent";
+import { logout, useAuth } from "@/lib/auth";
 
 const links = [
   { href: "/jual", label: "Sell with us" },
   { href: "/#story", label: "Our story" },
   { href: "/bantuan", label: "Help" },
-  { href: "/incaran", label: "Wishlist" },
-  { href: "/pesanan", label: "Orders" },
-  { href: "/masuk", label: "Sign in" },
 ];
+
+function accountLinks(user) {
+  if (!user) return [{ href: "/masuk", label: "Sign in" }, { href: "/daftar", label: "Create an account" }];
+  if (user.role === "admin") return [{ href: "/admin", label: "Admin" }];
+  return [
+    { href: "/incaran", label: "Wishlist" },
+    { href: "/pesanan", label: "Orders" },
+  ];
+}
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     if (!open) return;
@@ -54,11 +62,23 @@ export default function MobileMenu() {
         <div className="px-4 sm:px-8 py-8 flex flex-col gap-10">
           <ShopMenuContent onPick={close} compact />
           <div className="flex flex-col border-t border-line pt-6">
-            {links.map((l) => (
+            {[...links, ...accountLinks(user)].map((l) => (
               <Link key={l.href} href={l.href} onClick={close} className="py-3 text-lg border-b border-line">
                 {l.label}
               </Link>
             ))}
+            {user && (
+              <button
+                type="button"
+                onClick={() => {
+                  logout();
+                  close();
+                }}
+                className="py-3 text-lg border-b border-line text-left"
+              >
+                Sign out ({user.name.split(" ")[0]})
+              </button>
+            )}
           </div>
         </div>
       </div>
