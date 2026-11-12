@@ -4,7 +4,7 @@ Etalase web thrift store untuk barang unik berstok tunggal. Setiap barang hanya 
 
 Proyek ini adalah REST API (backend) dengan dua peran: **admin** (mengelola barang dan pesanan) dan **buyer** (berbelanja, wishlist, ulasan).
 
-## Kelompok <X>
+## Kelompok 21
 
 - Mayravivania Syahda Charisa (24/538308/TK/59701)
 - Zahira Anindya Putri (24/543202/TK/60347)
@@ -68,17 +68,17 @@ wearabouts/
 │   ├── orders.routes.js
 │   ├── wishlist.routes.js
 │   └── reviews.routes.js
-└── uploads/
+├── uploads/
+└── jobs/
 ```
 
-## Menjalankan
+## Cara Menjalankan
 
-```bash
-npm install
-cp .env.example .env     # isi MONGO_URI dan JWT_SECRET
-node seedAdmin.js        # bikin akun admin@wearabouts.com / admin123
-npm run dev
-```
+1. Clone repo, lalu masuk ke foldernya
+2. `npm install`
+3. Salin `.env.example` menjadi `.env`, lalu isi `MONGO_URI`, `JWT_SECRET`, `ADMIN_EMAIL`, dan `ADMIN_PASSWORD`
+4. Buat akun admin: `node seedAdmin.js` (memakai `ADMIN_EMAIL` dan `ADMIN_PASSWORD` dari `.env`)
+5. Jalankan server: `npm run dev` (berjalan di http://localhost:3000)
 
 ## Catatan API (tambahan Milestone 2)
 

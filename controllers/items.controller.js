@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Item = require('../models/Item');
+const Order = require('../models/Order');
 const savePhotos = require('../utils/savePhotos');
 
 // chest dan length datang dari form-data (string), kosong berarti tidak diisi
@@ -42,15 +43,19 @@ exports.getItemById = async (req, res) => {
 
     // rata-rata ulasan: model Review milik B, aman kalau belum ada
     let averageRating = null;
+    let reviewCount = 0;
     const Review = mongoose.models.Review;
     if (Review) {
       const agg = await Review.aggregate([
         { $match: { item: item._id } },
         { $group: { _id: null, avg: { $avg: '$rating' }, count: { $sum: 1 } } }
       ]);
-      if (agg.length) averageRating = { average: Number(agg[0].avg.toFixed(1)), count: agg[0].count };
+      if (agg.length) {
+        averageRating = Number(agg[0].avg.toFixed(1));
+        reviewCount = agg[0].count;
+      }
     }
-    res.json({ success: true, message: 'Detail barang', data: { ...item.toObject(), averageRating } });
+    res.json({ success: true, message: 'Detail barang', data: { ...item.toObject(), averageRating, reviewCount } });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Terjadi kesalahan server' });
   }
@@ -93,6 +98,9 @@ exports.updateItem = async (req, res) => {
     Object.entries(measurements).forEach(([k, v]) => { update['measurements.' + k] = v; });
     if (req.files && req.files.length) update.photos = await savePhotos(req.files);
 
+    if (update.status && await Order.exists({ item: req.params.id, status: { $ne: 'cancelled' } })) {
+      return res.status(409).json({ success: false, message: 'Barang punya pesanan aktif, status tidak bisa diubah manual' });
+    }
     const item = await Item.findByIdAndUpdate(req.params.id, update, { new: true, runValidators: true });
     if (!item) return res.status(404).json({ success: false, message: 'Barang tidak ditemukan' });
     res.json({ success: true, message: 'Barang diperbarui', data: item });
@@ -105,6 +113,10 @@ exports.deleteItem = async (req, res) => {
   try {
     if (!mongoose.isValidObjectId(req.params.id)) {
       return res.status(400).json({ success: false, message: 'ID tidak valid' });
+    }
+    // barang yang sudah punya pesanan tidak boleh dihapus (riwayat pesanan jadi rusak)
+    if (await Order.exists({ item: req.params.id })) {
+      return res.status(409).json({ success: false, message: 'Barang sudah punya pesanan, tidak bisa dihapus' });
     }
     const item = await Item.findByIdAndDelete(req.params.id);
     if (!item) return res.status(404).json({ success: false, message: 'Barang tidak ditemukan' });
