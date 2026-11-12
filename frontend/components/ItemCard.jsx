@@ -8,7 +8,7 @@ export default function ItemCard({ item }) {
   const sold = item.status === "sold";
 
   return (
-    <Link href={`/barang/${item._id}`} className="group flex flex-col gap-3.5">
+    <Link href={`/barang/${item._id}`} className="group flex flex-col gap-3.5 transition-transform duration-500 ease-out hover:-translate-y-1">
       <ItemPhoto item={item} faded={sold}>
         {sold ? (
           <div className="absolute inset-0 flex items-center justify-center">

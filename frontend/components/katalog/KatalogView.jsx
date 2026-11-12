@@ -38,7 +38,7 @@ function Katalog({ initial }) {
           {category ? category.label : "Every piece, once."}
         </h1>
         <p className="text-fg-2" aria-live="polite">
-          {loading ? "Loading..." : `${items.length} pieces · ${available} still looking for a home`}
+          {loading ? "Loading..." : `${items.length} ${items.length === 1 ? "piece" : "pieces"} · ${available} still looking for a home`}
         </p>
       </div>
 

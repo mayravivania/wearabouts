@@ -110,23 +110,23 @@ body {
 
 html.theme-anim {
   transition:
-    --bg 1.2s ease,
-    --surface 1.2s ease,
-    --photo 1.2s ease,
-    --line 1.2s ease,
-    --fg 1.2s ease,
-    --fg-2 1.2s ease,
-    --panel 1.2s ease,
-    --on-panel 1.2s ease,
-    --on-panel-2 1.2s ease,
-    --gold 1.2s ease,
-    --on-gold 1.2s ease,
-    --stamp 1.2s ease,
-    --deep 1.2s ease,
-    --on-deep 1.2s ease,
-    --btn 1.2s ease,
-    --on-btn 1.2s ease,
-    --btn-hover 1.2s ease !important;
+    --bg 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --surface 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --photo 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --line 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --fg 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --fg-2 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --panel 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --on-panel 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --on-panel-2 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --gold 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --on-gold 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --stamp 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --deep 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --on-deep 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --btn 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --on-btn 1.2s cubic-bezier(0.45, 0, 0.25, 1),
+    --btn-hover 1.2s cubic-bezier(0.45, 0, 0.25, 1) !important;
 }
 
 /* ikon tema dipilih lewat CSS supaya tidak hydration mismatch */
@@ -277,9 +277,143 @@ html.theme-anim {
 
 }
 
+/* pita berjalan: dua baris identik, geser setengah lebar lalu ulang */
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marquee 48s linear infinite;
+}
+.marquee__row {
+  display: flex;
+  gap: 2rem;
+  padding-right: 2rem;
+}
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .marquee__track {
+    animation: none;
+  }
   .group:hover .hang-tag,
   .hang-tag--idle {
+    animation: none;
+  }
+}
+
+/* gerakan: muncul saat scroll, hero bertahap, fade antar halaman */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero-slide .rise {
+  opacity: 0;
+}
+.hero-slide.is-active .rise {
+  animation: rise 1s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms) both;
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.page-in {
+  animation: page-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* judul hero: tiap baris naik dari balik masker */
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.line-in {
+  display: block;
+  transform: translateY(112%);
+}
+.hero-slide.is-active .line-in {
+  animation: line-up 0.75s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms) both;
+}
+@keyframes line-up {
+  from {
+    transform: translateY(112%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* miring ringan mengikuti kursor, nilainya diisi HeroCarousel */
+.hero-tilt {
+  transform: perspective(900px) rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg));
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* dipakai Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* garis bawah yang memanjang saat hover */
+.link-u {
+  background: linear-gradient(currentColor, currentColor) left bottom / 0% 1px no-repeat;
+  transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-u:hover {
+  background-size: 100% 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .hero-slide .rise,
+  .line-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none !important;
+  }
+  .hero-tilt {
+    transform: none;
+  }
+  .page-in {
     animation: none;
   }
 }

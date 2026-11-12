@@ -52,14 +52,15 @@ export function useRail() {
   return { ref, index, count, edges, go, goTo, measure };
 }
 
-export function ArrowButton({ dir, disabled, onClick, label, className = "" }) {
+export function ArrowButton({ dir, disabled, onClick, label, className = "", ...rest }) {
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
       aria-label={label}
-      className={`size-11 inline-flex items-center justify-center rounded-full border border-current/30 hover:border-current disabled:opacity-30 disabled:hover:border-current/30 ${className}`}
+      {...rest}
+      className={`size-11 inline-flex items-center justify-center rounded-full border border-current/50 hover:border-current hover:bg-current/10 transition-colors disabled:opacity-40 disabled:hover:border-current/50 disabled:hover:bg-transparent ${className}`}
     >
       <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" className={dir < 0 ? "rotate-180" : ""}>
         <path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.4" />

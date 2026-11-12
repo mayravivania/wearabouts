@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const base =
-  "inline-flex items-center justify-center gap-2 min-h-12 px-6 rounded-md text-[15px] font-medium transition-colors disabled:cursor-not-allowed";
+  "inline-flex items-center justify-center gap-2 min-h-12 px-6 rounded-md text-[15px] font-medium transition-[color,background-color,opacity,transform] duration-300 active:scale-[0.98] disabled:cursor-not-allowed";
 
 const variants = {
   primary: "bg-btn text-on-btn hover:bg-btn-hover disabled:opacity-40 disabled:hover:bg-btn",

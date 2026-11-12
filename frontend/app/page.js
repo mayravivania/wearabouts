@@ -1,6 +1,8 @@
 import Link from "next/link";
 import HeroCarousel from "@/components/home/HeroCarousel";
+import Marquee from "@/components/home/Marquee";
 import NewArrivals from "@/components/home/NewArrivals";
+import Reveal from "@/components/ui/Reveal";
 import { CATEGORIES } from "@/lib/config";
 
 const promises = [
@@ -28,53 +30,58 @@ export default function Home() {
   return (
     <div className="max-w-[1240px] mx-auto px-4 sm:px-8">
       <HeroCarousel />
+      <Marquee />
 
-      <section aria-label="Shop by category" className="pt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-        {CATEGORIES.map((c) => (
+      <section aria-label="Shop by category" className="pt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
+        {CATEGORIES.map((c, i) => (
+          <Reveal key={c.value} delay={i * 80}>
           <Link
-            key={c.value}
             href={`/katalog?category=${c.value}`}
-            className="group rounded-xl border border-line bg-surface p-5 sm:p-6 flex items-end justify-between gap-4 min-h-32 hover:border-fg transition-colors"
+            className="group relative rounded-xl border border-line bg-surface p-5 sm:p-6 flex items-end justify-between gap-4 min-h-32 hover:bg-panel hover:text-on-panel hover:border-panel hover:-translate-y-1 transition-[border-color,background-color,color,transform] duration-500"
           >
             <span className="flex flex-col gap-1">
               <span className="font-display text-2xl sm:text-3xl group-hover:italic">{c.label}</span>
-              <span className="text-sm text-fg-2">
+              <span className="text-sm text-fg-2 group-hover:text-on-panel-2 transition-colors duration-500">
                 Shop <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </span>
             </span>
-            <svg width="44" height="48" viewBox="0 0 44 48" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" className="text-fg-2 shrink-0" aria-hidden="true">
+            <svg width="44" height="48" viewBox="0 0 44 48" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" className="text-fg-2 group-hover:text-on-panel-2 transition-colors duration-500 shrink-0" aria-hidden="true">
               <path d={icons[c.value]} />
             </svg>
+            <span className="absolute top-4 right-4 text-lg opacity-0 -translate-x-1 translate-y-1 transition-all duration-500 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0" aria-hidden="true">
+              ↗
+            </span>
           </Link>
+          </Reveal>
         ))}
       </section>
 
       <section id="new" className="py-24 flex flex-col gap-10 scroll-mt-24">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <Reveal className="flex flex-wrap items-end justify-between gap-4">
           <div className="flex flex-col gap-3">
             <span className="w-8 border-t border-fg-2" />
             <span className="text-sm text-fg-2">New this week</span>
             <h2 className="font-display text-4xl sm:text-5xl tracking-tight leading-none">Just landed</h2>
           </div>
-          <Link href="/katalog" className="text-[15px] underline underline-offset-[6px] hover:opacity-70">
+          <Link href="/katalog" className="link-u text-[15px] pb-1">
             See everything →
           </Link>
-        </div>
+        </Reveal>
         <NewArrivals />
       </section>
 
       <section aria-label="What you can count on" className="grid gap-px bg-line border-y border-line sm:grid-cols-2 lg:grid-cols-4">
         {promises.map(([title, text], i) => (
-          <div key={title} className="bg-bg py-8 sm:px-6 first:sm:pl-0 flex flex-col gap-2">
+          <Reveal key={title} delay={i * 90} className="bg-bg py-8 sm:px-6 first:sm:pl-0 flex flex-col gap-2">
             <span className="text-xs text-fg-2 tabular-nums">0{i + 1}</span>
             <h3 className="font-display text-xl">{title}</h3>
             <p className="text-sm leading-relaxed text-fg-2">{text}</p>
-          </div>
+          </Reveal>
         ))}
       </section>
 
       <section id="story" className="mt-24 rounded-2xl bg-panel text-on-panel p-6 sm:p-14 grid gap-10 md:grid-cols-2 md:items-center scroll-mt-24">
-        <div className="flex flex-col gap-4">
+        <Reveal className="flex flex-col gap-4">
           <span className="w-8 border-t border-on-panel-2" />
           <span className="text-sm text-on-panel-2">The name</span>
           <h2 className="font-display text-4xl sm:text-6xl leading-[1.02] tracking-tight">
@@ -83,8 +90,8 @@ export default function Home() {
             <br />
             <span className="italic">whereabouts.</span>
           </h2>
-        </div>
-        <div className="flex flex-col gap-4 leading-relaxed text-on-panel-2 text-lg">
+        </Reveal>
+        <Reveal delay={160} className="flex flex-col gap-4 leading-relaxed text-on-panel-2 text-lg">
           <p>
             <span className="text-on-panel">Whereabouts</span> means where something is, and where it has been.
             Secondhand clothes carry plenty of both: a jacket that already lived through a few rainy seasons, a shirt
@@ -94,16 +101,16 @@ export default function Home() {
             None of that gets erased here. Every piece is listed with its real measurements, its honest marks and a
             number on its tag. Then it leaves, and its next whereabouts is wherever you wear it.
           </p>
-        </div>
+        </Reveal>
       </section>
 
       <section aria-label="How it works" className="pt-24 grid gap-12 md:grid-cols-3">
         {steps.map(([title, text], i) => (
-          <div key={title} className="flex flex-col gap-3 border-t border-line pt-6">
+          <Reveal key={title} delay={i * 120} className="flex flex-col gap-3 border-t border-line pt-6">
             <span className="text-sm text-fg-2">0{i + 1}</span>
             <h3 className="font-display text-3xl italic">{title}</h3>
             <p className="leading-relaxed text-fg-2">{text}</p>
-          </div>
+          </Reveal>
         ))}
       </section>
     </div>

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import ItemCard from "@/components/ItemCard";
+import Reveal from "@/components/ui/Reveal";
 import { useItems } from "@/hooks/useItems";
 import { useRail, ArrowButton } from "./useRail";
 
@@ -30,10 +31,10 @@ export default function NewArrivals() {
                 <div className="h-5 w-3/4 rounded bg-photo" />
               </div>
             ))
-          : shown.map((item) => (
-              <div key={item._id} className="snap-start shrink-0 w-[62vw] sm:w-[260px]">
+          : shown.map((item, i) => (
+              <Reveal key={item._id} delay={Math.min(i, 4) * 80} className="snap-start shrink-0 w-[62vw] sm:w-[260px]">
                 <ItemCard item={item} />
-              </div>
+              </Reveal>
             ))}
       </div>
       <div className="hidden sm:flex gap-2 self-end">

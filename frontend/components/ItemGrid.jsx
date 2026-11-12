@@ -1,4 +1,5 @@
 import ItemCard from "./ItemCard";
+import Reveal from "./ui/Reveal";
 
 const grid = "grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-x-4 md:gap-x-7 gap-y-12";
 
@@ -27,8 +28,10 @@ export default function ItemGrid({ items, loading, error, emptyText = "Nothing h
 
   return (
     <div className={grid}>
-      {items.map((item) => (
-        <ItemCard key={item._id} item={item} />
+      {items.map((item, i) => (
+        <Reveal key={item._id} delay={(i % 4) * 70}>
+          <ItemCard item={item} />
+        </Reveal>
       ))}
     </div>
   );

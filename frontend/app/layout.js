@@ -1,6 +1,8 @@
 import { Fraunces, Inter_Tight } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SmoothScroll from "@/components/ui/SmoothScroll";
+import { Suspense } from "react";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -31,16 +33,23 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       data-theme="light"
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
       className={`${fraunces.variable} ${interTight.variable} h-full antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <noscript>
+          <style>{".reveal,.hero-slide .rise,.line-in{opacity:1;transform:none}"}</style>
+        </noscript>
       </head>
       <body className="min-h-full flex flex-col font-sans">
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-bg focus:px-4 focus:py-2 focus:rounded-md">
           Skip to content
         </a>
+        <Suspense fallback={null}>
+          <SmoothScroll />
+        </Suspense>
         <Navbar />
         <main id="main" className="flex-1">{children}</main>
         <Footer />
