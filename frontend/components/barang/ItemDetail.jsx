@@ -12,12 +12,19 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { CATEGORIES, CONDITIONS } from "@/lib/config";
 import { getItem } from "@/lib/items";
 import { formatIDR, tagNumber } from "@/lib/format";
+import CheckoutForm from "./CheckoutForm";
+import { useCheckout } from "@/hooks/useCheckout";
+import { useSaveItem } from "@/hooks/useSaveItem";
+import ReviewList from "./ReviewList";
+import Stars from "@/components/ui/Stars";
 
 export default function ItemDetail() {
   const { id } = useParams();
   const [item, setItem] = useState(null);
   const [error, setError] = useState("");
-
+  const checkout = useCheckout({ itemId: id, onSold: () => setItem((it) => (it ? { ...it, status: "sold" } : it)) });
+  const wishlist = useSaveItem(id);
+  
   useEffect(() => {
     getItem(id)
       .then(setItem)
@@ -75,6 +82,14 @@ export default function ItemDetail() {
           </div>
 
           <h1 className="font-display text-4xl sm:text-5xl leading-[1.08] tracking-tight lg:pr-44">{item.name}</h1>
+          {item.reviewCount > 0 && (
+            <p className="flex items-center gap-2 text-sm text-fg-2">
+              <Stars value={Math.round(item.averageRating)} />
+              <span>
+                {item.averageRating} ({item.reviewCount} {item.reviewCount === 1 ? "review" : "reviews"})
+              </span>
+            </p>
+          )}
 
           <p className={`text-2xl ${sold ? "text-fg-2 line-through decoration-1" : ""}`}>{formatIDR(item.price)}</p>
 
@@ -99,17 +114,48 @@ export default function ItemDetail() {
           )}
 
           <div className="flex flex-wrap gap-3">
-            {/* TODO (Alya): POST /orders, kalau 409 tampilkan pesan keduluan */}
-            <Button disabled={sold} className="min-w-44">
+            
+            <Button 
+            disabled={sold || checkout.sending}
+            onClick={checkout.start}
+            aria-expanded={checkout.open} 
+            className="min-w-44"
+            >
               {sold ? "Already found a home" : "Buy now"}
             </Button>
-            {/* TODO (Alya): POST /wishlist */}
-            <Button variant="secondary" disabled={sold}>
-              Save to wishlist
+            
+            <Button variant="secondary" disabled={sold || wishlist.busy} onClick={wishlist.toggle}>
+              {wishlist.saved ? "Remove" : "Save to wishlist"}
             </Button>
           </div>
+
+          {checkout.open && !sold && (
+            <CheckoutForm defaultName={checkout.user?.name} sending={checkout.sending} onSubmit={checkout.submit} onCancel={checkout.close} />
+          )}
+
+          {wishlist.error && (
+            <p className="text-stamp max-w-md" role="alert">
+              {wishlist.error}
+            </p>
+          )}
+          
+          {checkout.error && (
+            <p className="text-stamp max-w-md" role="alert">
+              {checkout.error}
+            </p>
+          )}
+          {checkout.done && (
+            <p className="max-w-md" role="status">
+              Your order has been placed successfully.{" "}
+              <Link href="/pesanan" className="underline underline-offset-4 hover:text-fg">
+                See how to pay
+              </Link>
+            </p>
+          )}          
         </div>
       </div>
+
+      <ReviewList itemId={id} />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import Button from "@/components/ui/Button";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { CATEGORIES, SIZES, CONDITIONS, USE_MOCK } from "@/lib/config";
+import Link from "next/link";
 
 const field = "w-full min-h-12 rounded-md border border-line bg-bg px-4 text-[15px] focus:border-fg focus:outline-none";
 const labelCls = "text-sm text-fg-2";
@@ -57,7 +58,10 @@ export default function SellForm() {
           Got it. <span className="italic">Thank you.</span>
         </h2>
         <p className="text-fg-2 leading-relaxed">
-          We will look at the photos and get back to you within 3 working days, through the contact you left.
+          We will look at the photos and get back to you within 3 working days, through the contact you left.{" "}
+          <Link href="/pengajuan" className="underline underline-offset-4 hover:text-fg">
+            Track your requests
+          </Link>
         </p>
         <Button variant="secondary" onClick={() => setState({ sending: false, error: "", done: false })}>
           Send another piece
@@ -167,6 +171,9 @@ export default function SellForm() {
           {state.sending ? "Sending..." : "Send for review"}
         </Button>
         <span className="text-sm text-fg-2">You keep 80% when it sells.</span>
+        <Link href="/pengajuan" className="text-sm underline underline-offset-4 hover:opacity-70">
+          Your sell requests
+        </Link>
       </div>
     </form>
   );
