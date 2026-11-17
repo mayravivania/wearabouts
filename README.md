@@ -10,7 +10,7 @@ Aplikasi punya dua peran: **buyer** (berbelanja, wishlist, ulasan, mengajukan ba
 |---|---|
 | Aplikasi (deploy) | https://wearabouts-alpha.vercel.app |
 | API (deploy) | https://wearabouts-production.up.railway.app |
-| Video demo | [ISI LINK VIDEO DI SINI](ISI_LINK_VIDEO_DI_SINI) |
+| Video demo | https://drive.google.com/file/d/1A-_7NMVBxbO3G5ucf2510Pq2HoAz2ejU/view?usp=sharing |
 | Laporan | https://drive.google.com/drive/folders/13vDT0Kz2hLloYVStEiD8FmRsP62xxzX0?usp=sharing |
 
 Backend gratis di Railway bisa lambat saat pertama dibuka. Akun admin untuk penilaian diberikan terpisah, tidak ditulis di repo.
